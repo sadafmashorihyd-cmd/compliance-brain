@@ -17,7 +17,7 @@ async function callGroq(prompt: string): Promise<string> {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            model: "llama3-8b-8192",
+            model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 2000,
             temperature: 0.1,
@@ -45,13 +45,11 @@ export async function POST(req: NextRequest) {
 
         if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
-        // Extract text from uploaded document
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
         let docText = "";
         try {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
             const pdfParse = require("pdf-parse");
             const pdfData = await pdfParse(buffer);
             docText = pdfData.text.slice(0, 4000);
@@ -59,7 +57,6 @@ export async function POST(req: NextRequest) {
             docText = `Document: ${file.name}`;
         }
 
-        // Fetch ALL regulations for this industry + country from DB
         const { data: regulations } = await supabaseAdmin
             .from("regulations")
             .select("id, title, section_number, page_number, content, category")
@@ -71,18 +68,13 @@ export async function POST(req: NextRequest) {
             .map((r: any, i: number) => `REG_${i + 1}: [${r.title}] Section ${r.section_number}, Page ${r.page_number}\nContent: ${r.content?.slice(0, 200)}`)
             .join("\n\n");
 
-        const prompt = `You are a world-class compliance similarity analyst. Compare this document against each regulation and calculate similarity scores.
+        const prompt = `You are a compliance similarity analyst. Compare this document against regulations and calculate similarity scores.
 
 UPLOADED DOCUMENT:
 ${docText}
 
-REGULATIONS TO COMPARE AGAINST:
+REGULATIONS:
 ${regList || `General ${industry} compliance regulations in ${country}`}
-
-For each regulation, calculate:
-1. Similarity percentage (0-100%) — how much the document aligns with that regulation
-2. Match level: "strong" (70-100%), "partial" (40-69%), "weak" (0-39%)
-3. What matches and what is missing
 
 Return ONLY valid JSON:
 {
@@ -90,21 +82,21 @@ Return ONLY valid JSON:
   "document_name": "${file.name}",
   "industry": "${industry}",
   "country": "${country}",
-  "summary": "This document shows strong alignment with safety regulations but weak alignment with environmental standards.",
+  "summary": "2-3 sentence summary of similarity analysis",
   "regulation_matches": [
     {
-      "regulation_title": "Title of regulation",
-      "section": "Section number",
-      "page": "Page number",
+      "regulation_title": "Regulation name",
+      "section": "1.1",
+      "page": "5",
       "similarity_score": 85,
       "match_level": "strong",
-      "matched_clauses": ["Clause 1 that matches", "Clause 2 that matches"],
-      "missing_clauses": ["Missing requirement 1", "Missing requirement 2"]
+      "matched_clauses": ["Matched clause 1", "Matched clause 2"],
+      "missing_clauses": ["Missing requirement 1"]
     }
   ],
-  "top_matches": ["Regulation with highest similarity"],
-  "critical_gaps": ["Most important missing compliance areas"],
-  "recommendation": "Overall recommendation based on similarity analysis"
+  "top_matches": ["Most similar regulation"],
+  "critical_gaps": ["Most important gap"],
+  "recommendation": "Overall recommendation"
 }`;
 
         const text = await callGroq(prompt);
@@ -117,39 +109,31 @@ Return ONLY valid JSON:
             result = {
                 overall_similarity: 60,
                 document_name: file.name,
-                industry,
-                country,
+                industry, country,
                 summary: `Document analyzed for similarity with ${industry} regulations in ${country}.`,
-                regulation_matches: [
-                    {
-                        regulation_title: "General Compliance Framework",
-                        section: "1.1",
-                        page: "1",
-                        similarity_score: 60,
-                        match_level: "partial",
-                        matched_clauses: ["Basic compliance structure present"],
-                        missing_clauses: ["Detailed regulatory alignment needed"]
-                    }
-                ],
+                regulation_matches: [{
+                    regulation_title: "General Compliance Framework",
+                    section: "1.1", page: "1",
+                    similarity_score: 60,
+                    match_level: "partial",
+                    matched_clauses: ["Basic compliance structure present"],
+                    missing_clauses: ["Detailed regulatory alignment needed"]
+                }],
                 top_matches: ["General Compliance Framework"],
                 critical_gaps: ["Full regulatory review required"],
-                recommendation: "Schedule a detailed compliance audit with a qualified expert."
+                recommendation: "Schedule a detailed compliance audit."
             };
         }
 
-        // Save similarity result to DB
-        await supabaseAdmin
-            .from("uploaded_documents")
-            .insert({
-                user_id: userId,
-                file_name: file.name,
-                file_path: `similarity/${userId}/${Date.now()}_${file.name}`,
-                file_size: file.size,
-                industry,
-                country,
-                analysis_status: "similarity_done",
-                analysis_result: result,
-            });
+        await supabaseAdmin.from("uploaded_documents").insert({
+            user_id: userId,
+            file_name: file.name,
+            file_path: `similarity/${userId}/${Date.now()}_${file.name}`,
+            file_size: file.size,
+            industry, country,
+            analysis_status: "similarity_done",
+            analysis_result: result,
+        });
 
         return NextResponse.json({ success: true, result });
     } catch (error: any) {

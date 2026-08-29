@@ -17,7 +17,7 @@ async function callGroq(prompt: string): Promise<string> {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            model: "llama3-8b-8192",
+            model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 1500,
             temperature: 0.2,
@@ -35,7 +35,6 @@ async function callGroq(prompt: string): Promise<string> {
     return content;
 }
 
-// Pakistan cities with coordinates for SVG map
 const PAKISTAN_CITIES = [
     { name: "Karachi", x: 120, y: 310 },
     { name: "Lahore", x: 260, y: 180 },
@@ -55,7 +54,6 @@ export async function GET(req: NextRequest) {
         const industry = searchParams.get("industry") || "all";
         const country = searchParams.get("country") || "Pakistan";
 
-        // Get regulation counts and penalty data per city/region
         const { data: regulations } = await supabaseAdmin
             .from("regulations")
             .select("category, content, penalty, industry")
@@ -66,103 +64,28 @@ export async function GET(req: NextRequest) {
             .map((r: any) => `Category: ${r.category}, Industry: ${r.industry}, Penalty: ${r.penalty || "N/A"}`)
             .join("\n");
 
-        const prompt = `You are a compliance risk analyst for Pakistan. Based on regulations data, assign risk scores to major Pakistani cities for the ${industry} industry.
+        const prompt = `You are a compliance risk analyst for Pakistan. Assign risk scores to major Pakistani cities for the ${industry} industry.
 
 REGULATIONS DATA:
 ${regSummary || `General compliance regulations for ${industry} industry`}
 
-Consider:
-- Industrial concentration in each city (Karachi = Finance/Textile/Port, Lahore = Manufacturing/IT, Faisalabad = Textile, Islamabad = Government/IT, etc.)
-- Regulatory enforcement intensity by region
-- Historical compliance violations by industry type
-
-Return ONLY valid JSON with risk scores 0-100 for each city:
+Return ONLY valid JSON:
 {
   "industry": "${industry}",
   "country": "${country}",
-  "generated_at": "${new Date().toISOString()}",
-  "risk_summary": "Overall risk landscape summary in 2 sentences",
+  "generated_at": "2026-01-01T00:00:00Z",
+  "risk_summary": "2 sentence summary",
   "cities": [
-    {
-      "name": "Karachi",
-      "risk_score": 85,
-      "risk_level": "critical",
-      "top_risk": "Main compliance risk for this city",
-      "active_regulations": 12,
-      "industries_affected": ["Textile", "Pharmaceutical"]
-    },
-    {
-      "name": "Lahore",
-      "risk_score": 72,
-      "risk_level": "high",
-      "top_risk": "Main compliance risk for this city",
-      "active_regulations": 9,
-      "industries_affected": ["Manufacturing", "Construction"]
-    },
-    {
-      "name": "Islamabad",
-      "risk_score": 45,
-      "risk_level": "medium",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 6,
-      "industries_affected": ["IT", "Government"]
-    },
-    {
-      "name": "Faisalabad",
-      "risk_score": 78,
-      "risk_level": "high",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 8,
-      "industries_affected": ["Textile"]
-    },
-    {
-      "name": "Peshawar",
-      "risk_score": 55,
-      "risk_level": "medium",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 5,
-      "industries_affected": ["Construction"]
-    },
-    {
-      "name": "Quetta",
-      "risk_score": 40,
-      "risk_level": "low",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 4,
-      "industries_affected": ["Mining"]
-    },
-    {
-      "name": "Multan",
-      "risk_score": 62,
-      "risk_level": "medium",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 7,
-      "industries_affected": ["Agriculture", "Textile"]
-    },
-    {
-      "name": "Hyderabad",
-      "risk_score": 58,
-      "risk_level": "medium",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 6,
-      "industries_affected": ["Manufacturing"]
-    },
-    {
-      "name": "Sialkot",
-      "risk_score": 70,
-      "risk_level": "high",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 8,
-      "industries_affected": ["Manufacturing", "Export"]
-    },
-    {
-      "name": "Gujranwala",
-      "risk_score": 65,
-      "risk_level": "medium",
-      "top_risk": "Main compliance risk",
-      "active_regulations": 7,
-      "industries_affected": ["Manufacturing"]
-    }
+    {"name": "Karachi", "risk_score": 85, "risk_level": "critical", "top_risk": "risk description", "active_regulations": 12, "industries_affected": ["Textile"]},
+    {"name": "Lahore", "risk_score": 72, "risk_level": "high", "top_risk": "risk description", "active_regulations": 9, "industries_affected": ["Manufacturing"]},
+    {"name": "Islamabad", "risk_score": 45, "risk_level": "medium", "top_risk": "risk description", "active_regulations": 6, "industries_affected": ["IT"]},
+    {"name": "Faisalabad", "risk_score": 78, "risk_level": "high", "top_risk": "risk description", "active_regulations": 8, "industries_affected": ["Textile"]},
+    {"name": "Peshawar", "risk_score": 55, "risk_level": "medium", "top_risk": "risk description", "active_regulations": 5, "industries_affected": ["Construction"]},
+    {"name": "Quetta", "risk_score": 40, "risk_level": "low", "top_risk": "risk description", "active_regulations": 4, "industries_affected": ["Mining"]},
+    {"name": "Multan", "risk_score": 62, "risk_level": "medium", "top_risk": "risk description", "active_regulations": 7, "industries_affected": ["Textile"]},
+    {"name": "Hyderabad", "risk_score": 58, "risk_level": "medium", "top_risk": "risk description", "active_regulations": 6, "industries_affected": ["Manufacturing"]},
+    {"name": "Sialkot", "risk_score": 70, "risk_level": "high", "top_risk": "risk description", "active_regulations": 8, "industries_affected": ["Export"]},
+    {"name": "Gujranwala", "risk_score": 65, "risk_level": "medium", "top_risk": "risk description", "active_regulations": 7, "industries_affected": ["Manufacturing"]}
   ],
   "highest_risk_city": "Karachi",
   "lowest_risk_city": "Quetta"
@@ -175,12 +98,10 @@ Return ONLY valid JSON with risk scores 0-100 for each city:
         try {
             result = JSON.parse(clean);
         } catch {
-            // Fallback with default scores
             result = {
-                industry,
-                country,
+                industry, country,
                 generated_at: new Date().toISOString(),
-                risk_summary: `Risk analysis for ${industry} industry across ${country}. Higher industrial concentration = higher compliance risk.`,
+                risk_summary: `Risk analysis for ${industry} industry across ${country}.`,
                 cities: PAKISTAN_CITIES.map((c) => ({
                     name: c.name,
                     risk_score: Math.floor(Math.random() * 40) + 40,
@@ -194,7 +115,6 @@ Return ONLY valid JSON with risk scores 0-100 for each city:
             };
         }
 
-        // Attach SVG coordinates to each city
         result.cities = result.cities.map((city: any) => {
             const coords = PAKISTAN_CITIES.find(c => c.name === city.name);
             return { ...city, x: coords?.x || 200, y: coords?.y || 200 };

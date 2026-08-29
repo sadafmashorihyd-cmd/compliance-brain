@@ -17,7 +17,7 @@ async function callGroq(prompt: string): Promise<string> {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            model: "gemma2-9b-it",
+            model: "openai/gpt-oss-120b",
             messages: [{ role: "user", content: prompt }],
             max_tokens: 1500,
             temperature: 0.2,

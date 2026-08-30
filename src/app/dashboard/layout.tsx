@@ -10,8 +10,9 @@ const NAV = [
   { href: "/dashboard/chat", icon: MessageSquare, label: "Ask Compliance", glowLeft: true, glowRight: false, glowCenter: false, color: "#00FF88" },
   { href: "/dashboard/upload", icon: Upload, label: "Analyze Document", glowLeft: false, glowRight: false, glowCenter: true, color: "#00D4FF" },
   { href: "/dashboard/reports", icon: FileText, label: "Reports", glowLeft: false, glowRight: true, glowCenter: false, color: "#A855F7" },
+  { href: "/dashboard/similarity", icon: FileText, label: "🧬 Similarity", glowLeft: true, glowRight: true, glowCenter: false, color: "#00FF88" },
+  { href: "/dashboard/heatmap", icon: LayoutDashboard, label: "🗺️ Risk Heatmap", glowLeft: false, glowRight: true, glowCenter: true, color: "#FF6600" },
 ];
-
 function AnimatedBrain({ glowLeft = false, glowRight = false, glowCenter = false, color = "#00FF88", size = 32 }: {
   glowLeft?: boolean; glowRight?: boolean; glowCenter?: boolean; color?: string; size?: number;
 }) {

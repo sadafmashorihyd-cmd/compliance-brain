@@ -1,10 +1,35 @@
 "use client";
 import Link from "next/link";
-import { ArrowRight, FileText, Upload, MessageSquare } from "lucide-react";
+import { ArrowRight, Upload } from "lucide-react";
 
-const MG = "linear-gradient(135deg, #003300, #00CC44, #69FF47, #00CC44, #003300)";
+const RobotIcon = ({ color, size = 14 }: { color: string; size?: number }) => (
+  <svg viewBox="0 0 100 100" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5" y="5" width="90" height="90" rx="18" stroke={color} strokeWidth="4" />
+    <circle cx="50" cy="38" r="18" stroke={color} strokeWidth="3" />
+    <circle cx="50" cy="10" r="4" fill={color} />
+    <line x1="50" y1="14" x2="50" y2="20" stroke={color} strokeWidth="2.5" />
+    <rect x="34" y="30" width="10" height="7" rx="2" fill={color} />
+    <rect x="56" y="30" width="10" height="7" rx="2" fill={color} />
+    <path d="M38 48 Q50 56 62 48" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+    <circle cx="26" cy="38" r="5" stroke={color} strokeWidth="2" />
+    <circle cx="74" cy="38" r="5" stroke={color} strokeWidth="2" />
+    <path d="M68 65 Q74 55 80 60 Q85 65 80 75" stroke={color} strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    <path d="M68 65 L80 68 L78 75" stroke={color} strokeWidth="2" fill="none" />
+  </svg>
+);
 
-// Same animated brain as dashboard
+const ChartIcon = ({ color, size = 14 }: { color: string; size?: number }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="4" stroke={color} strokeWidth="1.5" fill="none" />
+    <rect x="5" y="13" width="2" height="4" fill={color} />
+    <rect x="9" y="10" width="2" height="7" fill={color} />
+    <rect x="13" y="7" width="2" height="10" fill={color} />
+    <circle cx="6" cy="10" r="1.5" fill={color} />
+    <circle cx="14" cy="6" r="1.5" fill={color} />
+    <path d="M6 10 L10 7 L14 6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
 function AnimatedBrain({ size = 32, color = "#00FF88" }: { size?: number; color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,19 +39,16 @@ function AnimatedBrain({ size = 32, color = "#00FF88" }: { size?: number; color?
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
-      {/* Left hemisphere */}
       <path d="M50 28 C50 28 40 24 33 31 C26 38 26 47 30 53 C25 58 23 65 28 71 C33 77 42 78 47 76 C49 80 50 82 50 82"
         stroke={color} strokeWidth="2.5" strokeLinecap="round" fill="none" filter="url(#heroGlow)" opacity="0.9" />
       <path d="M38 40 C41 37 45 39 45 44" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
       <path d="M32 54 C36 50 43 52 42 58" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
       <path d="M34 66 C38 63 44 65 43 70" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
-      {/* Right hemisphere */}
       <path d="M50 28 C50 28 60 24 67 31 C74 38 74 47 70 53 C75 58 77 65 72 71 C67 77 58 78 53 76 C51 80 50 82 50 82"
         stroke={color} strokeWidth="2.5" strokeLinecap="round" fill="none" filter="url(#heroGlow)" opacity="0.9" />
       <path d="M62 40 C59 37 55 39 55 44" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
       <path d="M68 54 C64 50 57 52 58 58" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
       <path d="M66 66 C62 63 56 65 57 70" stroke={color} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
-      {/* Center */}
       <line x1="50" y1="28" x2="50" y2="82" stroke={color} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.4" />
       <circle cx="50" cy="50" r="4" fill={color} filter="url(#heroGlow)" />
       <circle cx="37" cy="46" r="2" fill={color} opacity="0.6" />
@@ -42,6 +64,12 @@ function AnimatedBrain({ size = 32, color = "#00FF88" }: { size?: number; color?
 }
 
 export default function HomePage() {
+  const features = [
+    { icon: <RobotIcon color="#00FF88" size={14} />, title: "AI Chatbot", desc: "Exact answers with document, section, page & line references.", color: "#00FF88" },
+    { icon: <Upload size={14} color="#00D4FF" />, title: "Document Analysis", desc: "Upload docs. AI instantly checks compliance gaps.", color: "#00D4FF" },
+    { icon: <ChartIcon color="#A855F7" size={14} />, title: "PDF Reports", desc: "Professional compliance reports generated in seconds.", color: "#A855F7" },
+  ];
+
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#0A0A0A", minHeight: "100vh", color: "#fff", overflowX: "hidden" }}>
       <style>{`
@@ -142,14 +170,10 @@ export default function HomePage() {
       {/* Features */}
       <section style={{ maxWidth: 1060, margin: "0 auto", padding: "0 20px 56px" }}>
         <div className="grid-3">
-          {[
-            { icon: MessageSquare, title: "AI Chatbot", desc: "Exact answers with document, section, page & line references.", color: "#00FF88" },
-            { icon: Upload, title: "Document Analysis", desc: "Upload docs. AI instantly checks compliance gaps.", color: "#00D4FF" },
-            { icon: FileText, title: "PDF Reports", desc: "Professional compliance reports generated in seconds.", color: "#A855F7" },
-          ].map(f => (
+          {features.map(f => (
             <div key={f.title} className="card-dark">
               <div style={{ width: 32, height: 32, borderRadius: 8, background: f.color + "12", border: `1px solid ${f.color}25`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-                <f.icon size={14} color={f.color} />
+                {f.icon}
               </div>
               <h3 style={{ fontSize: 13, fontWeight: 700, color: "#E5E7EB", marginBottom: 6 }}>{f.title}</h3>
               <p style={{ fontSize: 11, color: "#444", lineHeight: 1.6 }}>{f.desc}</p>
@@ -188,7 +212,7 @@ export default function HomePage() {
       </section>
 
       <footer style={{ borderTop: "1px solid #111", padding: "16px 20px", textAlign: "center" }}>
-        <p style={{ fontSize: 10, color: "#2A2A2A" }}>© 2024 Compliance Brain · AI compliance for MENA industries</p>
+        <p style={{ fontSize: 10, color: "#2A2A2A" }}>© 2026 Compliance Brain · AI compliance for MENA industries</p>
       </footer>
     </div>
   );

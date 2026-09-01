@@ -1,8 +1,36 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { MessageSquare, FileText, Upload, ArrowRight, CheckCircle, Zap } from "lucide-react";
+import { ArrowRight, Upload, FileText } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+
+const RobotIcon = ({ color, size = 15 }: { color: string; size?: number }) => (
+  <svg viewBox="0 0 100 100" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5" y="5" width="90" height="90" rx="18" stroke={color} strokeWidth="4" />
+    <circle cx="50" cy="38" r="18" stroke={color} strokeWidth="3" />
+    <circle cx="50" cy="10" r="4" fill={color} />
+    <line x1="50" y1="14" x2="50" y2="20" stroke={color} strokeWidth="2.5" />
+    <rect x="34" y="30" width="10" height="7" rx="2" fill={color} />
+    <rect x="56" y="30" width="10" height="7" rx="2" fill={color} />
+    <path d="M38 48 Q50 56 62 48" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+    <circle cx="26" cy="38" r="5" stroke={color} strokeWidth="2" />
+    <circle cx="74" cy="38" r="5" stroke={color} strokeWidth="2" />
+    <path d="M68 65 Q74 55 80 60 Q85 65 80 75" stroke={color} strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    <path d="M68 65 L80 68 L78 75" stroke={color} strokeWidth="2" fill="none" />
+  </svg>
+);
+
+const ChartIcon = ({ color, size = 15 }: { color: string; size?: number }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="4" stroke={color} strokeWidth="1.5" fill="none" />
+    <rect x="5" y="13" width="2" height="4" fill={color} />
+    <rect x="9" y="10" width="2" height="7" fill={color} />
+    <rect x="13" y="7" width="2" height="10" fill={color} />
+    <circle cx="6" cy="10" r="1.5" fill={color} />
+    <circle cx="14" cy="6" r="1.5" fill={color} />
+    <path d="M6 10 L10 7 L14 6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
 
 export default function DashboardPage() {
   const [userName, setUserName] = useState("");
@@ -26,9 +54,30 @@ export default function DashboardPage() {
   }, []);
 
   const actions = [
-    { href: "/dashboard/chat", icon: MessageSquare, color: "#00FF88", bg: "#00FF8810", border: "#00FF8820", title: "Ask Compliance", desc: "Exact regulation references with page & line numbers", cta: "Ask now" },
-    { href: "/dashboard/upload", icon: Upload, color: "#00D4FF", bg: "#00D4FF10", border: "#00D4FF20", title: "Analyze Document", desc: "Upload docs for instant AI compliance check", cta: "Upload" },
-    { href: "/dashboard/reports", icon: FileText, color: "#A855F7", bg: "#A855F710", border: "#A855F720", title: "Generate Report", desc: "Create professional PDF compliance reports", cta: "Generate" },
+    {
+      href: "/dashboard/chat",
+      icon: <RobotIcon color="#00FF88" size={15} />,
+      color: "#00FF88", bg: "#00FF8810", border: "#00FF8820",
+      title: "Ask Compliance",
+      desc: "Exact regulation references with page & line numbers",
+      cta: "Ask now"
+    },
+    {
+      href: "/dashboard/upload",
+      icon: <Upload size={15} color="#00D4FF" />,
+      color: "#00D4FF", bg: "#00D4FF10", border: "#00D4FF20",
+      title: "Analyze Document",
+      desc: "Upload docs for instant AI compliance check",
+      cta: "Upload"
+    },
+    {
+      href: "/dashboard/reports",
+      icon: <ChartIcon color="#A855F7" size={15} />,
+      color: "#A855F7", bg: "#A855F710", border: "#A855F720",
+      title: "Generate Report",
+      desc: "Create professional PDF compliance reports",
+      cta: "Generate"
+    },
   ];
 
   const coverage = [
@@ -75,11 +124,11 @@ export default function DashboardPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 28 }}>
         {actions.map(a => (
           <Link key={a.href} href={a.href}
-            style={{ background: "#111", border: `1px solid #1E1E1E`, borderRadius: 12, padding: "18px", display: "block", textDecoration: "none", transition: "all 0.2s", cursor: "pointer" }}
+            style={{ background: "#111", border: "1px solid #1E1E1E", borderRadius: 12, padding: "18px", display: "block", textDecoration: "none", transition: "all 0.2s", cursor: "pointer" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = a.border; e.currentTarget.style.background = "#141414"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 8px 24px ${a.color}10`; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = "#1E1E1E"; e.currentTarget.style.background = "#111"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
             <div style={{ width: 34, height: 34, borderRadius: 9, background: a.bg, border: `1px solid ${a.border}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-              <a.icon size={15} color={a.color} />
+              {a.icon}
             </div>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#E5E7EB", marginBottom: 5 }}>{a.title}</p>
             <p style={{ fontSize: 11, color: "#444", lineHeight: 1.5, marginBottom: 14 }}>{a.desc}</p>

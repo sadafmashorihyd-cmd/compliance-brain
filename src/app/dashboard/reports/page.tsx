@@ -5,6 +5,18 @@ import { supabase } from "@/lib/supabase";
 const INDUSTRIES = ["Textile", "Construction", "Pharmaceutical"];
 const COUNTRIES = ["Pakistan", "UAE", "Saudi Arabia", "Egypt"];
 
+const ChartIcon = ({ size = 64, color = "#A855F7" }: { size?: number; color?: string }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="4" stroke={color} strokeWidth="1.5" fill="none" />
+    <rect x="5" y="13" width="2" height="4" fill={color} />
+    <rect x="9" y="10" width="2" height="7" fill={color} />
+    <rect x="13" y="7" width="2" height="10" fill={color} />
+    <circle cx="6" cy="10" r="1.5" fill={color} />
+    <circle cx="14" cy="6" r="1.5" fill={color} />
+    <path d="M6 10 L10 7 L14 6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
 export default function ReportsPage() {
   const [reports, setReports] = useState<any[]>([]);
   const [generating, setGenerating] = useState(false);
@@ -109,7 +121,7 @@ export default function ReportsPage() {
 
       <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
 
-        {/* Sidebar — Reports List */}
+        {/* Sidebar */}
         <div style={{ width: 260, flexShrink: 0, background: "#0D0D0D", borderRight: "1px solid #1A1A1A", display: "flex", flexDirection: "column" }}>
           <div style={{ padding: "20px 16px", borderBottom: "1px solid #1A1A1A" }}>
             <h1 style={{ fontSize: 15, fontWeight: 800, marginBottom: 12, background: "linear-gradient(135deg, #A855F7, #7C3AED)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -143,8 +155,8 @@ export default function ReportsPage() {
             ))}
             {reports.length === 0 && (
               <div style={{ textAlign: "center", padding: "40px 16px" }}>
-                <div style={{ fontSize: 32, marginBottom: 8 }}>📊</div>
-                <p style={{ fontSize: 11, color: "#333" }}>No reports yet</p>
+                <ChartIcon size={40} color="#333" />
+                <p style={{ fontSize: 11, color: "#333", marginTop: 8 }}>No reports yet</p>
               </div>
             )}
           </div>
@@ -159,7 +171,9 @@ export default function ReportsPage() {
               <div className="slide-in" style={{ background: "#0F0F0F", border: "1px solid #A855F730", borderRadius: 16, padding: "28px", width: 400 }}>
                 {generating ? (
                   <div style={{ textAlign: "center", padding: "20px 0" }}>
-                    <div style={{ fontSize: 48, marginBottom: 16, animation: "pulse 1.5s infinite" }}>🧠</div>
+                    <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, animation: "pulse 1.5s infinite" }}>
+                      <ChartIcon size={48} color="#A855F7" />
+                    </div>
                     <p style={{ fontSize: 14, fontWeight: 700, color: "#A855F7", marginBottom: 4 }}>{genStage}</p>
                     <div style={{ background: "#1A1A1A", borderRadius: 99, height: 6, overflow: "hidden", margin: "16px 0" }}>
                       <div style={{ height: "100%", width: `${genProgress}%`, background: "linear-gradient(90deg, #7C3AED, #A855F7)", borderRadius: 99, transition: "width 0.5s ease" }} />
@@ -214,7 +228,6 @@ export default function ReportsPage() {
           {/* Report Viewer */}
           {activeReport ? (
             <div style={{ padding: "28px" }} className="slide-in">
-              {/* Report Header */}
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 24 }}>
                 <div>
                   <h2 style={{ fontSize: 18, fontWeight: 800, color: "#fff", marginBottom: 4 }}>{activeReport.title}</h2>
@@ -229,7 +242,6 @@ export default function ReportsPage() {
                 </button>
               </div>
 
-              {/* Score + Summary */}
               <div style={{ background: "#0D0D0D", border: "1px solid #1E1E1E", borderRadius: 16, padding: "20px", marginBottom: 16, display: "flex", gap: 20, alignItems: "center" }}>
                 {activeReport.report_data?.overall_score && (
                   <div style={{ position: "relative", width: 70, height: 70, flexShrink: 0 }}>
@@ -251,7 +263,6 @@ export default function ReportsPage() {
                 </div>
               </div>
 
-              {/* Sections */}
               {(activeReport.report_data?.sections || []).map((section: any, si: number) => (
                 <div key={si} style={{ background: "#0D0D0D", border: "1px solid #1E1E1E", borderRadius: 16, marginBottom: 12, overflow: "hidden" }}>
                   <div style={{ padding: "14px 20px", background: "#111", borderBottom: "1px solid #1E1E1E", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -283,7 +294,7 @@ export default function ReportsPage() {
             </div>
           ) : (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", flexDirection: "column", gap: 12 }}>
-              <div style={{ fontSize: 64 }}>📊</div>
+              <ChartIcon size={64} color="#222" />
               <p style={{ fontSize: 14, fontWeight: 700, color: "#333" }}>No report selected</p>
               <button onClick={() => setShowForm(true)}
                 style={{ padding: "10px 20px", fontSize: 13, fontWeight: 700, background: "linear-gradient(135deg, #3B1F7A, #A855F7)", color: "#fff", border: "none", borderRadius: 9, cursor: "pointer" }}>

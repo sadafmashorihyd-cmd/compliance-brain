@@ -5,6 +5,22 @@ import { supabase } from "@/lib/supabase";
 
 const MG = "linear-gradient(135deg, #003300, #00CC44, #69FF47, #00CC44, #003300)";
 
+const RobotIcon = ({ size = 44 }: { size?: number }) => (
+  <svg viewBox="0 0 100 100" width={size} height={size} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5" y="5" width="90" height="90" rx="18" stroke="#00ff88" strokeWidth="4" />
+    <circle cx="50" cy="38" r="18" stroke="#00ff88" strokeWidth="3" />
+    <circle cx="50" cy="10" r="4" fill="#00ff88" />
+    <line x1="50" y1="14" x2="50" y2="20" stroke="#00ff88" strokeWidth="2.5" />
+    <rect x="34" y="30" width="10" height="7" rx="2" fill="#00ff88" />
+    <rect x="56" y="30" width="10" height="7" rx="2" fill="#00ff88" />
+    <path d="M38 48 Q50 56 62 48" stroke="#00ff88" strokeWidth="2.5" strokeLinecap="round" />
+    <circle cx="26" cy="38" r="5" stroke="#00ff88" strokeWidth="2" />
+    <circle cx="74" cy="38" r="5" stroke="#00ff88" strokeWidth="2" />
+    <path d="M68 65 Q74 55 80 60 Q85 65 80 75" stroke="#00ff88" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+    <path d="M68 65 L80 68 L78 75" stroke="#00ff88" strokeWidth="2" fill="none" />
+  </svg>
+);
+
 function renderMarkdown(text: string) {
   return text
     .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
@@ -118,7 +134,9 @@ export default function ChatPage() {
         <div style={{ flex: 1, overflowY: "auto", padding: "20px", display: "flex", flexDirection: "column", gap: 14 }}>
           {messages.length === 0 && (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center" }}>
-              <div style={{ width: 44, height: 44, background: "#00FF8810", border: "1px solid #00FF8820", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12, fontSize: 20 }}>🧠</div>
+              <div style={{ width: 44, height: 44, background: "#00FF8810", border: "1px solid #00FF8820", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+                <RobotIcon size={32} />
+              </div>
               <p style={{ fontSize: 14, fontWeight: 700, color: "#00FF88", marginBottom: 4 }}>Ask anything about compliance</p>
               <p style={{ fontSize: 11, color: "#444", marginBottom: 16 }}>Exact regulation references for {industry} in {country}</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>

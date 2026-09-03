@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Upload, FileText } from "lucide-react";
+import { ArrowRight, Upload } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 const RobotIcon = ({ color, size = 15 }: { color: string; size?: number }) => (

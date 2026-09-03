@@ -124,7 +124,7 @@ export default function HomePage() {
       <nav style={{ borderBottom: "1px solid #141414", position: "sticky", top: 0, zIndex: 50, background: "rgba(10,10,10,0.92)", backdropFilter: "blur(12px)", height: 50 }}>
         <div style={{ maxWidth: 1060, margin: "0 auto", padding: "0 20px", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <AnimatedBrain size={28} color="#00FF88" />
+            <img src="/logo.png" width={28} height={28} style={{ borderRadius: 8 }} alt="Compliance Brain" />
             <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: "-0.01em" }}>Compliance Brain</span>
           </div>
           <div style={{ display: "flex", gap: 6 }}>
@@ -137,7 +137,7 @@ export default function HomePage() {
       {/* Hero */}
       <section style={{ maxWidth: 1060, margin: "0 auto", padding: "32px 20px 40px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
         <div className="brain-pulse" style={{ marginBottom: 16 }}>
-          <AnimatedBrain size={80} color="#00FF88" />
+          <img src="/logo.png" width={80} height={80} style={{ borderRadius: 16 }} alt="Compliance Brain" />
         </div>
 
         <div style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "#00FF8808", border: "1px solid #00FF8820", borderRadius: 999, padding: "3px 12px", fontSize: 10, fontWeight: 700, color: "#00FF88", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 14 }}>
@@ -202,7 +202,7 @@ export default function HomePage() {
         <div style={{ background: "linear-gradient(135deg, #0A1A0A, #0D1F0D)", border: "1px solid #1A2A1A", borderRadius: 16, padding: "40px 28px", textAlign: "center", position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 300, height: 300, background: "radial-gradient(circle, #00FF8806 0%, transparent 70%)", pointerEvents: "none" }} />
           <div className="brain-pulse" style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-            <AnimatedBrain size={48} color="#00FF88" />
+            <img src="/logo.png" width={48} height={48} style={{ borderRadius: 10 }} alt="Compliance Brain" />
           </div>
           <p style={{ fontSize: 10, fontWeight: 700, color: "#00FF88", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Start today</p>
           <h2 style={{ fontSize: 24, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Ready to be compliant?</h2>
